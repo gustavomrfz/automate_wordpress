@@ -1,16 +1,16 @@
 #!/bin/bash
 
- if [ -e install_wordpress.conf];then
+ if [[ -e install_wordpress.conf ]];then
  		source ./conf/install_wordpress.conf;
  else
-    iferror "First you need configure parameters"
+        iferror "First you need configure parameters"
  fi
 
 
 sudoers_root="root ALL=(ALL:ALL) ALL"
 sudoers_wpcli="wpcli ALL=(www-data) NOPASSWD: /usr/local/bin/wp"
 
-useradd wpcli;
+useradd $wpcli;
 
 # function: start
 # Install sudo if it is not and run script
