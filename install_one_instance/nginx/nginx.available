@@ -1,0 +1,80 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server ipv6only=on;
+#	listen 443 ssl;
+	root ROOTPATH;
+	index index.php index.html index.htm;
+
+	server_name DOMAIN;
+#	ssl_certificate /etc/letsencrypt/live/laenredadera.net-0001/fullchain.pem;
+#	ssl_certificate_key /etc/letsencrypt/live/laenredadera.net-0001/privkey.pem;
+        location / {
+        	try_files $uri $uri/ /index.php?q=$uri&$args;
+	}
+
+	error_page 404 /404.html;
+        location ~* wp-config.php {
+                deny all;
+        }
+	location = /favicon.ico {
+		log_not_found off;
+		access_log off;
+	}
+
+	location = /robots.txt {
+		allow all;
+		log_not_found off;
+		access_log off;
+	}
+
+	error_page 500 502 503 504 /50x.html;
+	location = /50x.html {
+		root /usr/share/nginx/html;
+	}
+
+	location ~ \.php$ {
+#NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+		fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+		fastcgi_pass_header Set-Cookie;
+		fastcgi_pass_header Cookie;
+		fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_split_path_info ^(.+.php)(/.+)$;
+		fastcgi_param  PATH_INFO $fastcgi_path_info;
+		fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
+		fastcgi_intercept_errors on;
+		fastcgi_cache_valid 404 60m;
+		fastcgi_cache_valid 200 60m;
+		fastcgi_cache_valid 304 60m;
+		fastcgi_max_temp_file_size 60m;
+		fastcgi_cache_use_stale updating;
+		fastcgi_index index.php;
+		include fastcgi_params;
+
+	}
+
+    set $cache_uri $request_uri;
+            # POST requests and URLs with a query string should always go to PHP
+    if ($request_method = POST) {
+        set $cache_uri 'null cache';
+    }
+    if ($query_string != "") {
+        set $cache_uri 'null cache';
+    }
+
+    # Don't cache URIs containing the following segments
+    if ($request_uri ~* "(/wp-admin/|/xmlrpc.php|/wp-(app|cron|login|register|mail).php|wp-.*.php|/feed/|index.php|wp-comments-popup.php|wp-links-opml.php|wp-locations.php |sitemap(_index)?.xml|[a-z0-9_-]+-sitemap([0-9]+)?.xml)") {
+        set $cache_uri 'null cache';
+    }
+    # Don't use the cache for logged-in users or recent commenters
+    if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_logged_in") {
+        set $cache_uri 'null cache';
+    }
+    location ~*\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|css|rss|atom|js|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
+        expires max;
+        log_not_found off;
+        access_log off;
+    }
+
+
+}
