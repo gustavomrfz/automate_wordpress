@@ -158,8 +158,4 @@ function nginx_enable_site {
 	systemctl reload nginx;
 }
 
-# function: start
-# start to run script
-
-
 start
