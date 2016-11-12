@@ -1,6 +1,6 @@
 # Atomate Wordpress
 
-# Scripts for automate Wordpress related tasks
+# Scripts for automating tasks related to Wordpress
 
 These **Bash scripts** automate some usual tasks working with **Wordpress**, and **Nginx**/**MariaDB** backend. The scripts are usefull on a clean Debian Jessie installation  and surely they don't work on Ubuntu so far. It's advise to **not** install an Apache or other HTTP server, unless they are listening at any port except port 80, so they could may cause conflicts with Nginx.  
 
