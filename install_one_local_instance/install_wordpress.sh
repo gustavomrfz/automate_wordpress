@@ -1,7 +1,13 @@
 #!/bin/bash
 
- if [[ -e ./conf/install_wordpress.conf ]];then
- 		source ./conf/install_wordpress.conf;
+
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root" 1>&2
+  exit 1
+fi
+
+ if [[ -e ./conf/config ]];then
+ 		source ./conf/config;
  else
         iferror "First you need configure parameters"
  fi
@@ -69,7 +75,7 @@ function create_database {
 # create user for wordpress and grant all privileges
 
 function create_and_grant_user {
-	mysql -uroot -p$mysql_root_pass -e " grant all privileges on $title.* to \
+	mysql -uroot -p$mysql_root_pass -e " grant all privileges on $wp_db_name.* to \
 	'$wp_db_user'@'localhost' identified by '$wp_db_password';"
 }
 
@@ -116,7 +122,7 @@ function install_WP {
 		|| iferror "Wordpress not configured" ;
 
 		sudo -u $wpcli_user -- wp core install \
-		--url=$domain --title=$title --path=$wp_path --admin_user=$wp_admin_user \
+		--url=$domain --title="$title" --path=$wp_path --admin_user=$wp_admin_user \
 		--admin_password=$wp_admin_password --admin_email=$wp_admin_email \
     --path=$wp_path \
 		|| iferror "Wordpress not installed";
