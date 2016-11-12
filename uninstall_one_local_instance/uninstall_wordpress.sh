@@ -10,7 +10,7 @@ function iferror {
 
 if [[ $# -eq 0 ]]; then
   echo "You must enter a FQDN as parameter. \
-  Example: ./uninstall_wordpress.sh evildomain.org"; exit 1;
+  Example: ./uninstall_wordpress.sh yourdomain.org"; exit 1;
 else
   domain=$1
 fi
@@ -45,7 +45,7 @@ function get_config_parameters {
   db_host=$(grep "DB_PASSWORD" $wp_cnf | awk -F"'" '{print $4}')
   if [[ $db_host == '' ]]; then
       db_host=localhost
-  fi 
+  fi
 }
 
 # function: mysql_remove_database
@@ -97,5 +97,3 @@ function start {
   && nginx_disable_site \
   && nginx_remove_site
 }
-
-
