@@ -1,16 +1,14 @@
 #!/bin/bash
 
-
 if [ "$(id -u)" != "0" ]; then
   echo "This script must be run as root" 1>&2
   exit 1
 fi
-
- if [[ -e ./conf/config ]];then
+if [[ -e ./conf/config ]];then
  		source ./conf/config;
- else
+else
         iferror "First you need configure parameters"
- fi
+fi
 
 
 sudoers_root="root ALL=(ALL:ALL) ALL"
