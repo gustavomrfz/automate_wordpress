@@ -8,19 +8,6 @@ function iferror {
 	fi
 }
 
-if [[ $# -eq 0 ]]; then
-  echo "You must enter a FQDN as parameter. \
-  Example: ./uninstall_wordpress.sh yourdomain.org"; exit 1;
-else
-  domain=$1
-fi
-
-if [ "$(id -u)" != "0" ]; then
-  echo "This script must be run as root" 1>&2
-  exit 1
-fi
-
-
 # function: read_root_path
 # Read root path from Nginx server
 
@@ -97,3 +84,16 @@ function start {
   && nginx_disable_site \
   && nginx_remove_site
 }
+
+if [[ $# -eq 0 ]]; then
+  echo "You must enter a FQDN as parameter. \
+  Example: ./uninstall_wordpress.sh evildomain.org"; exit 1;
+else
+  domain=$1
+fi
+
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root" 1>&2
+  exit 1
+fi
+start
