@@ -40,9 +40,10 @@ function get_config_parameters {
 # Produces a backup of full database in a tar.gz file
 
 function mysql_dump {
+   ssh $backup_user@$backup_host "mkdir -p $backup_remote_dir/$domain"
   mysqldump --user $db_user --password=$db_password  \
   $db_name | gzip -c | ssh $backup_user@$backup_host "cat > \
-  $backup_remote_dir/$(date +%Y%m%d)$db_name.sql.gz" \
+  $backup_remote_dir/$domain/$(date +%Y%m%d)$db_name.sql.gz" \
   || iferror "Backup for database named $db_name has failed" \
   && wp_simple_backup_files;
 }
@@ -50,10 +51,10 @@ function mysql_dump {
 # Produces a tar.gz to a remote host
 
 function wp_simple_backup_files {
-  targz_file="/tmp/$(date +%Y%m%d)$domain.tar.gz";
+  wp_targz="/tmp/$(date +%Y%m%d)$domain.tar.gz";
   if [[ -d $wp_path ]]; then
-		tar czfp $targz_file -C $wp_path  - \
-    && scp "$targz_file" $backup_user@$backup_host:$backup_remote_dir/. \
+    tar czfp $wp_targz -C $wp_path . \
+    && scp $wp_targz $backup_user@$backup_host:$backup_remote_dir/$domain/. \
     && rm -f $targz_file \
     || iferror "Backup file not sended to $backup_host"
   fi
@@ -64,7 +65,7 @@ function wp_simple_backup_files {
 function nginx_site_backup {
   if [[ -e /etc/nginx/sites-enabled/$domain.conf ]]; then
     scp /etc/nginx/sites-enabled/$domain.conf \
-    $backup_user@$backup_host:$backup_remote_dir/.
+    $backup_user@$backup_host:$backup_remote_dir/$domain/.
   fi
 }
 
