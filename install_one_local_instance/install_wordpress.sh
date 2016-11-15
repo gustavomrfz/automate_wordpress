@@ -40,7 +40,7 @@ set_php7_sources() {
 
 function install_dependencies {
 	apt-get -y install sudo mariadb-server mariadb-client \
-	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 sshfs \
+	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 \
         && install_WP_cli \
         && if ! ( grep -qs $sudoers_root /etc/sudoers ); then
 							echo $sudoers_root >> /etc/sudoers;
