@@ -75,7 +75,7 @@ Only a FQDN domain name is needed as parameter. Script takes the rest of paramet
 
 ## Backup Wordpress
 
-Backup database, files and Nginx's site configuration via SSH to a remote folder. A pair of SSH keys is highly recommended. If you need some help to create them, this [tutorial](https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password) is a good first step.
+Backup database, files and Nginx's site configuration via SSH to a remote folder. A pair of SSH keys is highly recommended. If you need some help to use them, this [tutorial](https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password) is a good first step.
 
 ### Usage
 
@@ -83,7 +83,32 @@ Backup database, files and Nginx's site configuration via SSH to a remote folder
 
 ### Parameters
 
-Defined in /params/backup.conf
+Defined in `/params/backup.conf`
+
+###### FQDN to backup
+ `domain=`
+###### Remote user for SSH
+
+`backup_user=`
+
+###### Remote host (IP or domain name)
+`backup_host=`
+
+###### Remote path where files will be stored
+`backup_remote_dir=`
+
+
+## Restore Wordpress
+
+Restored a site backed with the previous script.
+
+### Usage
+
+`./restore_wordpress`
+
+### Parameters
+
+Defined in `params/restore.conf`
 
 ###### FQDN to backup
  `domain=`
