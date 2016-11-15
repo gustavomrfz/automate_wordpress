@@ -1,16 +1,5 @@
 #!/bin/bash
 
-if [ "$(id -u)" != "0" ]; then
-  echo "This script must be run as root" 1>&2
-  exit 1
-fi
-if [[ -e ./conf/config ]];then
- 		source ./conf/config;
-else
-        iferror "First you need configure parameters"
-fi
-
-
 sudoers_root="root ALL=(ALL:ALL) ALL"
 sudoers_wpcli="wpcli ALL=(www-data) NOPASSWD: /usr/local/bin/wp"
 
@@ -51,7 +40,7 @@ set_php7_sources() {
 
 function install_dependencies {
 	apt-get -y install sudo mariadb-server mariadb-client \
-	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 \
+	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 sshfs \
         && install_WP_cli \
         && if ! ( grep -qs $sudoers_root /etc/sudoers ); then
 							echo $sudoers_root >> /etc/sudoers;
@@ -161,5 +150,15 @@ function nginx_enable_site {
 	|| iferror "sites-enabled/$domain not created";
 	systemctl reload nginx;
 }
+
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root" 1>&2
+  exit 1
+fi
+if [[ -e ./conf/config ]];then
+ 		source ./conf/config;
+else
+        iferror "First you need configure parameters"
+fi
 
 start
