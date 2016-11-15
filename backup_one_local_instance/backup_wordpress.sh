@@ -25,8 +25,8 @@ function read_root_path {
 # Read wp-conging.php to get parameters
 
 function get_config_parameters {
-  wp_cnf=$wp_path/wp-config.php;
 
+  wp_cnf=$wp_path/wp-config.php;
   db_name=$(grep "DB_NAME" $wp_cnf | awk -F"'" '{print $4}');
   db_user=$(grep "DB_USER" $wp_cnf | awk -F"'" '{print $4}');
   db_password=$(grep "DB_PASSWORD" $wp_cnf | awk -F"'" '{print $4}');
@@ -34,7 +34,6 @@ function get_config_parameters {
   if [[ $db_host == '' ]]; then
       db_host=localhost;
   fi
-  echo $db_name $db_password
 }
 
 # function: mysql_dump
@@ -51,12 +50,11 @@ function mysql_dump {
 # Produces a tar.gz to a remote host
 
 function wp_simple_backup_files {
-  bck_file="/tmp/$(date +%Y%m%d)$domain.tar.gz";
+  targz_file="/tmp/$(date +%Y%m%d)$domain.tar.gz";
   if [[ -d $wp_path ]]; then
-    tar czfp $bck_file $wp_path \
-		&& ssh $backup_user@$backup_host -e "mkdir $backup_remote_dir/$domain"
-    && scp "$bck_file" $backup_user@$backup_host:$backup_remote_dir/$domian/. \
-    && rm -f $bck_file \
+		tar czfp $targz_file -C $wp_path  - \
+    && scp "$targz_file" $backup_user@$backup_host:$backup_remote_dir/. \
+    && rm -f $targz_file \
     || iferror "Backup file not sended to $backup_host"
   fi
 }
