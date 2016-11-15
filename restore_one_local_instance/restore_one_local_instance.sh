@@ -124,6 +124,7 @@ function start {
   nginx_disable_server \
   && mount_remote_backup \
   && nginx_enable_server
+  sleep 4 && rm -fR $mnt_dir
 }
 
 if [[ -e ./params/restore.conf ]];then
