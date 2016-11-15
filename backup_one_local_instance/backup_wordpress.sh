@@ -9,8 +9,6 @@ function iferror {
 	fi
 }
 
-
-
 # function: read_root_path
 # Read root path from Nginx server
 
@@ -56,7 +54,8 @@ function wp_simple_backup_files {
   bck_file="/tmp/$(date +%Y%m%d)$domain.tar.gz";
   if [[ -d $wp_path ]]; then
     tar czfp $bck_file $wp_path \
-    && scp "$bck_file" $backup_user@$backup_host:$backup_remote_dir/. \
+		&& ssh $backup_user@$backup_host -e "mkdir $backup_remote_dir/$domain"
+    && scp "$bck_file" $backup_user@$backup_host:$backup_remote_dir/$domian/. \
     && rm -f $bck_file \
     || iferror "Backup file not sended to $backup_host"
   fi
