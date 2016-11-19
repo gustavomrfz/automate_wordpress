@@ -9,7 +9,7 @@ function iferror {
 }
 
 # function: mount_remote_backups
-# mmount remote backup for a domain
+# mount remote backup for a domain
 
 function mount_remote_backup {
   mnt_dir=/tmp/$RANDOM;
@@ -57,8 +57,8 @@ function restore_files {
 
 }
 
-#function: set_config_parameters
-# get wp-config dabase parameters
+# function: set_config_parameters
+# get wp-config.php dabase parameters
 
 function set_config_parameters {
 
@@ -78,7 +78,7 @@ function set_config_parameters {
 
 
 # function: restore_database
-# restores database and tables to Mariadb/mysql_root_pass
+# restore database and tables to Mariadb/mysql_root_pass
 
 function restore_database {
 

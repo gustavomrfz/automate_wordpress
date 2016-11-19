@@ -22,7 +22,7 @@ function read_root_path {
 }
 
 # function: get_config_parameters
-# Read wp-conging.php to get parameters
+# Read wp-config.php to get parameters
 
 function get_config_parameters {
 
