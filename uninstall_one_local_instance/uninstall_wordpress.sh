@@ -21,7 +21,7 @@ function read_root_path {
 }
 
 # function: get_config_parameters
-# Read wp-conging.php to get parameters needed to uninstall
+# Read wp-config.php to get parameters needed to uninstall
 
 function get_config_parameters {
   wp_cnf=$wp_path/wp-config.php
