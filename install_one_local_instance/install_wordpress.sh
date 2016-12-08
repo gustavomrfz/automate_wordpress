@@ -40,7 +40,7 @@ set_php7_sources() {
 
 function install_dependencies {
 	apt-get -y install sudo mariadb-server mariadb-client \
-	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 \
+	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 imagemagick \
         && install_WP_cli \
         && if ! ( grep -qs $sudoers_root /etc/sudoers ); then
 							echo $sudoers_root >> /etc/sudoers;
@@ -115,6 +115,7 @@ function install_WP {
 		|| iferror "Wordpress not installed";
 
 		chmod -R 775 $wp_path;
+                chmod -R www-data: $wp_path;
 		nginx_create_site
   fi
 }
