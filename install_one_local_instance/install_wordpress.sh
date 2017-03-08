@@ -9,7 +9,7 @@ useradd $wpcli_user;
 # Install sudo if it is not and run script
 
 function start {
-	 set_php7_source && sapt-get update && apt-get -y install
+	 set_php7_source && apt-get update && apt-get -y install
 }
 
 # function: iferror
@@ -93,7 +93,7 @@ function install_WP {
 		create_and_grant_user;
 
 		mkdir -p $wp_path && chmod -R 777 $wp_path && chown -R \
-		www-data:www-data $wp_path;
+		www-data.www-data $wp_path;
 
 		sudo -u $wpcli_user -- wp core download --locale=$wp_locale \
 		--path=$wp_path \
@@ -115,7 +115,6 @@ function install_WP {
 		|| iferror "Wordpress not installed";
 
 		chmod -R 775 $wp_path;
-                chmod -R www-data: $wp_path;
 		nginx_create_site
   fi
 }
