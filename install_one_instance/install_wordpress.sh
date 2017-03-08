@@ -16,7 +16,7 @@ useradd $wpcli;
 # Install sudo if it is not and run script
 
 function start {
-	apt-get update && apt-get -y install sudo && set_php7_sources
+	 set_php7_source && sapt-get update && apt-get -y install
 }
 
 # function: iferror
