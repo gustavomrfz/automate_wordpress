@@ -1,16 +1,9 @@
 #!/bin/bash
 
- if [[ -e install_wordpress.conf ]];then
- 		source ./conf/install_wordpress.conf;
- else
-        iferror "First you need configure parameters"
- fi
-
-
 sudoers_root="root ALL=(ALL:ALL) ALL"
 sudoers_wpcli="wpcli ALL=(www-data) NOPASSWD: /usr/local/bin/wp"
 
-useradd $wpcli;
+useradd $wpcli_user;
 
 # function: start
 # Install sudo if it is not and run script
@@ -47,7 +40,7 @@ set_php7_sources() {
 
 function install_dependencies {
 	apt-get -y install sudo mariadb-server mariadb-client \
-	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 \
+	php7.0-mysql php7.0-fpm nginx nginx-extras php7.0 imagemagick \
         && install_WP_cli \
         && if ! ( grep -qs $sudoers_root /etc/sudoers ); then
 							echo $sudoers_root >> /etc/sudoers;
@@ -69,7 +62,7 @@ function create_database {
 # create user for wordpress and grant all privileges
 
 function create_and_grant_user {
-	mysql -uroot -p$mysql_root_pass -e " grant all privileges on $title.* to \
+	mysql -uroot -p$mysql_root_pass -e " grant all privileges on $wp_db_name.* to \
 	'$wp_db_user'@'localhost' identified by '$wp_db_password';"
 }
 
@@ -116,12 +109,13 @@ function install_WP {
 		|| iferror "Wordpress not configured" ;
 
 		sudo -u $wpcli_user -- wp core install \
-		--url=$domain --title=$title --path=$wp_path --admin_user=$wp_admin_user \
+		--url=$domain --title="$title" --path=$wp_path --admin_user=$wp_admin_user \
 		--admin_password=$wp_admin_password --admin_email=$wp_admin_email \
     --path=$wp_path \
 		|| iferror "Wordpress not installed";
 
 		chmod -R 775 $wp_path;
+                chmod -R www-data: $wp_path;
 		nginx_create_site
   fi
 }
@@ -158,8 +152,14 @@ function nginx_enable_site {
 	systemctl reload nginx;
 }
 
-# function: start
-# start to run script
-
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root" 1>&2
+  exit 1
+fi
+if [[ -e ./conf/config ]];then
+ 		source ./conf/config;
+else
+        iferror "First you need configure parameters"
+fi
 
 start

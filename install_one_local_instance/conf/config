@@ -10,7 +10,7 @@
 #wp_charset=
 # Wordpress locales
 #wp_locale=
-# Wordpress user with administrations rights
+# Wordpress user with administration rights
 #wp_admin_user=
 # Password for Wordpress administrator
 #wp_admin_password=
