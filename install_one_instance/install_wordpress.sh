@@ -16,7 +16,7 @@ useradd $wpcli;
 # Install sudo if it is not and run script
 
 function start {
-	apt-get update && apt-get -y install sudo && set_php7_sources
+	sudo set_php7_sources && apt-get update && apt-get -y install  
 }
 
 # function: iferror
@@ -120,7 +120,7 @@ function install_WP {
 		--admin_password=$wp_admin_password --admin_email=$wp_admin_email \
     --path=$wp_path \
 		|| iferror "Wordpress not installed";
-
+		
 		chmod -R 775 $wp_path;
 		nginx_create_site
   fi
